@@ -1,71 +1,62 @@
 name: Build and Release Executable
 
 on:
-  workflow_dispatch: # 手动触发
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
-
-permissions: # **新增：显式设置 GITHUB_TOKEN 权限**
-  contents: write # 允许写入仓库内容，包括 Releases
+  workflow_dispatch: # 手动触发 workflow
 
 jobs:
-  build-linux:
-    runs-on: ubuntu-22.04
+  build:
+    runs-on: ubuntu-22.04 # 使用 Ubuntu 22.04 系统
 
     steps:
-      - uses: actions/checkout@v3
+      - name: Checkout code # 检出代码
+        uses: actions/checkout@v3
 
-      - name: Set up Python 3.10
+      - name: Set up Python 3.10 # 设置 Python 3.10 环境
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
 
-      - name: Install dependencies
+      - name: Install dependencies # 安装 Python 依赖
+        run: pip install -r requirements.txt
+
+      - name: Install PyInstaller # 安装 PyInstaller
+        run: pip install pyinstaller
+
+      - name: Create executable with PyInstaller # 使用 PyInstaller 创建可执行文件
         run: |
-          python -m pip install --upgrade pip
-          pip install pyinstaller
+          pyinstaller --onefile \
+            --name pfpanel \ # 可执行文件名称
+            --add-data "login.html:." \templates # 添加 login.html 到可执行文件目录
+            --add-data "config.html:." \templates # 添加 config.html 到可执行文件目录
+            --add-data "404.html:." \templates # 添加 404.html 到可执行文件目录
+            pfpanel.py # 主程序文件
 
-      - name: Build executable with PyInstaller
-        run: |
-          pyinstaller pfpanel.spec
-
-      - name: Zip executable for release # **提前压缩 zip 文件，放到 Create Release 步骤之前**
-        run: |
-          cd dist
-          zip -r pfpanel.zip pfpanel # 将 dist/pfpanel 文件夹压缩成 pfpanel.zip
-
-      - name: Upload executable artifact (for workflow) # 保留上传 Artifact 步骤
-        uses: actions/upload-artifact@v4
-        with:
-          name: pfpanel-linux-executable
-          path: dist/pfpanel
-
-      - name: Create Release # 创建 GitHub Release (使用 actions/create-release@v1，不再尝试更新)
-        uses: actions/create-release@v1 # **改回 actions/create-release@v1，放弃 Release 更新**
+      - name: Create GitHub Release # 创建 GitHub Release
+        id: create_release
+        uses: actions/create-release@v1
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # 使用 GitHub Token
         with:
-          tag_name: v${{ github.run_number }} # **动态生成 Release 标签，每次运行都创建新 Release**
-          release_name: Polyfield Server Panel Build ${{ github.run_number }} # 动态生成 Release 名称
+          tag_name: v1.5.0-${{ github.run_number }} # Release tag，例如 v1.5.0-123 (Run Number)
+          release_name: Polyfield Server Panel v1.5.0 (Build ${{ github.run_number }}) # Release 名称
           body: |
-            🎉 感谢使用 Polyfield Server Panel 最新构建版本！🎉
+            🎉 自动构建的可执行文件，版本 v1.5.0！ 🎉
 
-            本次更新为自动构建版本，可能包含最新的代码更改和修复。  具体更新内容请参考代码提交记录。
+            此版本为自动构建版本，包含以下更新：
+            - 自动打包可执行文件
+            - 包含 HTML 模板文件
+            - 使用 GitHub Actions 自动发布
 
-            **下载链接：**  请在 Assets 中下载 `pfpanel-linux-executable.zip` 文件。
+            感谢使用 Polyfield Server Panel!  如有任何问题，请提交 Issue。
+          draft: false # 是否为草稿 Release，设置为 false 发布正式 Release
+          prerelease: false # 是否为预发布版本，设置为 false 发布正式 Release
 
-            感谢您的支持！😊
-          draft: false
-          prerelease: false
-
-      - name: Upload Release Asset # 上传可执行文件到 Release
+      - name: Upload executable to Release # 上传可执行文件到 Release
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }}
-          asset_path: dist/pfpanel.zip # 上传之前压缩好的 zip 文件
-          asset_name: pfpanel-linux-executable.zip
-          asset_content_type: application/zip
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # 从 create_release 步骤获取上传 URL
+          asset_path: ./dist/pfpanel # 可执行文件路径 (PyInstaller 默认输出目录为 dist)
+          asset_name: pfpanel-linux-x64 # Release 资源名称，例如 pfpanel-linux-x64
+          asset_content_type: application/octet-stream # 资源 MIME 类型，可执行文件通常使用 application/octet-stream
