@@ -7,6 +7,9 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions: # **新增：显式设置 GITHUB_TOKEN 权限**
+  contents: write # 允许写入仓库内容，包括 Releases
+
 jobs:
   build-linux:
     runs-on: ubuntu-22.04
@@ -28,40 +31,41 @@ jobs:
         run: |
           pyinstaller pfpanel.spec
 
+      - name: Zip executable for release # **提前压缩 zip 文件，放到 Create Release 步骤之前**
+        run: |
+          cd dist
+          zip -r pfpanel.zip pfpanel # 将 dist/pfpanel 文件夹压缩成 pfpanel.zip
+
       - name: Upload executable artifact (for workflow) # 保留上传 Artifact 步骤
         uses: actions/upload-artifact@v4
         with:
           name: pfpanel-linux-executable
           path: dist/pfpanel
 
-      - name: Create or Update Release # 创建或更新 GitHub Release (使用 softprops/action-gh-release)
-        uses: softprops/action-gh-release@v1 #  替换为 softprops/action-gh-release@v1
+      - name: Create Release # 创建 GitHub Release (使用 actions/create-release@v1，不再尝试更新)
+        uses: actions/create-release@v1 # **改回 actions/create-release@v1，放弃 Release 更新**
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.5 # Release 标签为 v1.5 (硬编码)
-          name: Polyfield Server Panel v1.5 # Release 名称 (硬编码)
+          tag_name: v${{ github.run_number }} # **动态生成 Release 标签，每次运行都创建新 Release**
+          release_name: Polyfield Server Panel Build ${{ github.run_number }} # 动态生成 Release 名称
           body: |
-            🎉 感谢使用 Polyfield Server Panel v1.5！🎉
+            🎉 感谢使用 Polyfield Server Panel 最新构建版本！🎉
 
-            本次更新带来了最新构建的可执行文件，可能包含以下改进 (具体更新内容请参考代码提交记录)：
-
-            * ✨ 最新可执行文件版本：  现在您可以直接下载预编译的可执行文件，无需配置 Python 环境，一键启动控制面板！
-            * 🚀 性能优化：  可能包含性能优化，提升控制面板的运行效率。
-            * 🐛 Bug 修复：  可能修复了一些 Bug，提升了稳定性和用户体验。
-            * 📝 文档更新：  文档可能进行了更新，提供了更完善的使用说明。
-
-            感谢 SFSHC from AVD战队的持续维护！  如果您在使用过程中遇到任何问题或有任何建议，欢迎在 GitHub Issues 中反馈。
+            本次更新为自动构建版本，可能包含最新的代码更改和修复。  具体更新内容请参考代码提交记录。
 
             **下载链接：**  请在 Assets 中下载 `pfpanel-linux-executable.zip` 文件。
 
             感谢您的支持！😊
           draft: false
           prerelease: false
-          files: dist/pfpanel.zip # **重要：直接在 Create Release 步骤中上传 Asset**
-          fail_if_exists: false # **新增：如果 Release 已存在，则更新 Release，而不是失败**
 
-      - name: Zip executable for release # 将可执行文件压缩成 zip 包 (不再需要单独的 Upload Release Asset 步骤)
-        run: |
-          cd dist
-          zip -r pfpanel.zip pfpanel # 将 dist/pfpanel 文件夹压缩成 pfpanel.zip
+      - name: Upload Release Asset # 上传可执行文件到 Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create-release.outputs.upload_url }}
+          asset_path: dist/pfpanel.zip # 上传之前压缩好的 zip 文件
+          asset_name: pfpanel-linux-executable.zip
+          asset_content_type: application/zip
