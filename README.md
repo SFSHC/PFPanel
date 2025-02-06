@@ -9,7 +9,7 @@
 
 ## 🎉 欢迎使用 PFPanel！ 🎉
 
-您好！感谢您使用 **PFPanel** —— 由 **SFSHC from AVD战队** 倾心打造的 **Polyfield** 游戏服务器 Web 控制面板。告别繁琐的命令行，拥抱简洁、直观的 Web 界面，让服务器管理变得轻松愉悦！
+您好！感谢您使用 **PFPanel** —— 由 **SFSHC** 简单搓的 **Polyfield** 游戏服务器 Web 控制面板。告别繁琐的命令行，拥抱简洁、直观的 Web 界面，让服务器管理变得轻松愉悦！
 
 **PFPanel 能为您做什么？**
 
@@ -171,7 +171,7 @@ PFPanel 仅为控制面板，不包含 Polyfield 服务端程序。请参考 [Po
 
 ## 📞 联系方式
 
-*   作者: SFSHC from AVD战队
+*   作者: SFSHC
 *   项目主页: [https://github.com/SFSHC/PFPanel](https://github.com/SFSHC/PFPanel)
 *   GitHub: [https://github.com/SFSHC](https://github.com/SFSHC)
 *   Polyfield 官网: [https://www.polyfield.net/](https://www.polyfield.net/)
@@ -182,4 +182,4 @@ PFPanel 仅为控制面板，不包含 Polyfield 服务端程序。请参考 [Po
 
 ---
 
-🛠️ **SFSHC from AVD战队 匠心之作** 🛠️ (v1.5.0) © 2024-2025 SFSHC from AVD战队. 保留所有权利.
+🛠️ **SFSHC 制作** 🛠️ (v1.5.0) © 2024-2025 SFSHC AVD. 保留所有权利.
