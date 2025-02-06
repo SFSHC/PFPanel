@@ -49,7 +49,7 @@ PFPanel 为您提供多种启动方式，选择适合您的即可：
 *   ✅ **pip:**  Python 包管理器。
 *   ✅ **网络畅通:**  用于下载依赖。
 *   ✅ **防火墙端口:**  确保已开放程序端口。
-*   ✅ **Polyfield 服务端部署:**  [Polyfield 服务端安装文档](https://polyfield.net/builds/%2523README.txt)
+*   ✅ **Polyfield 服务端部署:**  [Polyfield 服务端中文安装文档](https://github.com/SFSHC/PFPanel/blob/main/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3%E4%B8%AD%E6%96%87)
 
 #### 🕹️ 详细步骤
 
@@ -124,9 +124,9 @@ PFPanel 为您提供多种启动方式，选择适合您的即可：
 
 **注意:**  可执行文件启动方式，配置文件 `server_config.ini` 和 HTML 模板文件将与可执行文件位于同一目录。首次运行，请手动创建 `server_config.ini` 文件 (复制 `server_config.ini.template` 并修改)。
 
-### ⚙️  服务端配置 (Polyfield Server)  [中文文档 (微软翻译)](https://www.microsofttranslator.com/bv.aspx?to=zh-CN&ref= SERP&url=https://polyfield.net/builds/%2523README.txt)
+### ⚙️  服务端配置 (Polyfield Server)  [中文文档 ](https://github.com/SFSHC/PFPanel/blob/main/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3%E4%B8%AD%E6%96%87)
 
-PFPanel 仅为控制面板，不包含 Polyfield 服务端程序。  请务必参考 [Polyfield 官方文档](https://www.polyfield.net/builds/%23README.txt)  配置 Polyfield 服务端。
+PFPanel 仅为控制面板，不包含 Polyfield 服务端程序。  请务必参考 [Polyfield 服务端中文安装文档]([https://www.polyfield.net/builds/%23README.txt](https://github.com/SFSHC/PFPanel/blob/main/%E6%9C%8D%E5%8A%A1%E7%AB%AF%E5%AE%89%E8%A3%85%E6%96%87%E6%A1%A3%E4%B8%AD%E6%96%87))  配置 Polyfield 服务端。
 
 **简要步骤:**
 
