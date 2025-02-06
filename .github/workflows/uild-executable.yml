@@ -6,7 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04 # 使用 Ubuntu 22.04 系统
-    permissions: write-all # 显式声明 Workflow 写入权限  <--- 添加这一行
+    permissions: write-all # 显式声明 Workflow 写入权限
 
     steps:
       - name: Checkout code # 检出代码
@@ -24,7 +24,7 @@ jobs:
         run: pip install pyinstaller
 
       - name: Create executable with PyInstaller # 使用 PyInstaller 创建可执行文件
-        run: pyinstaller --onefile --name pfpanel --add-data "templates/login.html:." --add-data "templates/config.html:." --add-data "templates/404.html:." pfpanel.py
+        run: pyinstaller --onefile --name pfpanel --add-data "templates:templates" pfpanel.py # <-- 修改了 --add-data 参数
 
       - name: Create GitHub Release # 创建 GitHub Release
         id: create_release
