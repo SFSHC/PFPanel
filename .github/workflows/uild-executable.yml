@@ -22,6 +22,9 @@ jobs:
       - name: Install PyInstaller # 安装 PyInstaller
         run: pip install pyinstaller
 
+      - name: Debug: List workspace files # 添加 Debug 步骤，列出工作区文件
+        run: ls -R
+
       - name: Create executable with PyInstaller # 使用 PyInstaller 创建可执行文件
         run: pyinstaller --onefile --name pfpanel --add-data "templates/login.html:." --add-data "templates/config.html:." --add-data "templates/404.html:." pfpanel.py
 
