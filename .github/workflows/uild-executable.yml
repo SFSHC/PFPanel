@@ -6,6 +6,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-22.04 # 使用 Ubuntu 22.04 系统
+    permissions: write-all # 显式声明 Workflow 写入权限  <--- 添加这一行
 
     steps:
       - name: Checkout code # 检出代码
@@ -22,10 +23,7 @@ jobs:
       - name: Install PyInstaller # 安装 PyInstaller
         run: pip install pyinstaller
 
-      - name: Debug: List workspace files # 添加 Debug 步骤，列出工作区文件  <--- 第 25 行 (请检查此行缩进)
-        run: ls -R                                          <--- 第 26 行 (请检查此行缩进，应在上一行 name: 下缩进)
-
-      - name: Create executable with PyInstaller # 使用 PyInstaller 创建可执行文件 <--- 第 27 行 (请检查此行缩进)
+      - name: Create executable with PyInstaller # 使用 PyInstaller 创建可执行文件
         run: pyinstaller --onefile --name pfpanel --add-data "templates/login.html:." --add-data "templates/config.html:." --add-data "templates/404.html:." pfpanel.py
 
       - name: Create GitHub Release # 创建 GitHub Release
@@ -48,12 +46,12 @@ jobs:
           draft: false # 是否为草稿 Release，设置为 false 发布正式 Release
           prerelease: false # 是否为预发布版本，设置为 false 发布正式 Release
 
-          - name: Upload executable to Release # 上传可执行文件到 Release
-            uses: actions/upload-release-asset@v1
-            env:
-              GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-            with:
-              upload_url: ${{ steps.create_release.outputs.upload_url }} # 从 create_release 步骤获取上传 URL
-              asset_path: ./dist/pfpanel # 可执行文件路径 (PyInstaller 默认输出目录为 dist)
-              asset_name: pfpanel-linux-x64 # Release 资源名称，例如 pfpanel-linux-x64
-              asset_content_type: application/octet-stream # 资源 MIME 类型，可执行文件通常使用 application/octet-stream
+      - name: Upload executable to Release # 上传可执行文件到 Release
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }} # 从 create_release 步骤获取上传 URL
+          asset_path: ./dist/pfpanel # 可执行文件路径 (PyInstaller 默认输出目录为 dist)
+          asset_name: pfpanel-linux-x64 # Release 资源名称，例如 pfpanel-linux-x64
+          asset_content_type: application/octet-stream # 资源 MIME 类型，可执行文件通常使用 application/octet-stream
