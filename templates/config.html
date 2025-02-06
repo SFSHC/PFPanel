@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta charset="UTF-8">
+    <title>服务器配置</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <style>
+        .collapsible-header {
+            cursor: pointer;
+        }
+        .data-value {
+            font-weight: bold;
+        }
+        .progress-container {
+            position: relative;
+            margin-bottom: 0.75rem;
+        }
+        .progress-label {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 0.8rem;
+            color: white;
+        }
+        .card-header i {
+            margin-right: 0.5em;
+        }
+        /* 提高饱和度 */
+        .bg-primary {
+            background-color: rgb(70, 130, 180) !important; /* 钢青色 */
+        }
+        .bg-info {
+            background-color: rgb(173, 216, 230) !important; /* 淡蓝色 */
+            color: #333 !important;
+        }
+        .bg-secondary {
+             background-color: rgb(128, 128, 128) !important; /* 灰色 */
+            color: white !important;
+        }
+        .bg-success {
+             background-color: rgb(144, 238, 144) !important; /* 淡绿色 */
+        }
+        .bg-danger {
+            background-color: rgb(240, 128, 128) !important; /* 淡红色 */
+        }
+        .btn-primary {
+            background-color: rgb(70, 130, 180) !important;
+            border-color: rgb(70, 130, 180) !important;
+        }
+        .btn-success {
+            background-color: rgb(144, 238, 144) !important;
+            border-color: rgb(144, 238, 144) !important;
+        }
+        .btn-danger {
+            background-color: rgb(240, 128, 128) !important;
+            border-color: rgb(240, 128, 128) !important;
+        }
+         .btn-secondary {
+           background-color: rgb(128, 128, 128) !important;
+            border-color: rgb(128, 128, 128) !important;
+            color: white !important;
+        }
+        .btn-warning {
+            background-color: rgb(255, 215, 0) !important; /* 金色 */
+            border-color: rgb(255, 215, 0) !important;
+        }
+         .rename-input {
+            display: none;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="#"><i class="fas fa-server"></i> 服务器管理面板</a>
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="/logout"><i class="fas fa-sign-out-alt"></i> 退出</a>
+            </li>
+        </ul>
+    </nav>
+    <div class="container mt-3">
+        <div class="row">
+            <div class="col-md-6">
+                <div class="card shadow mb-3 animate__animated animate__fadeIn">
+                    <div class="card-header bg-primary text-white collapsible-header" data-toggle="collapse" data-target="#server-control">
+                        <i class="fas fa-power-off"></i> 服务器控制
+                    </div>
+                    <div class="collapse show" id="server-control">
+                        <div class="card-body">
+                            <button id="start-server-btn" class="btn btn-success" onclick="controlServer('start')" >
+                                <i class="fas fa-play"></i> 启动服务器
+                            </button>
+                            <button id="stop-server-btn" class="btn btn-danger ml-2" onclick="controlServer('stop')" disabled>
+                                <i class="fas fa-stop"></i> 停止服务器
+                            </button>
+                            <p class="mt-3">服务器状态: <span id="server-status" class="data-value">加载中...</span></p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow mb-3 animate__animated animate__fadeIn">
+                    <div class="card-header bg-info text-dark collapsible-header" data-toggle="collapse" data-target="#server-info">
+                        <i class="fas fa-info-circle"></i> 服务器信息
+                    </div>
+                    <div class="collapse show" id="server-info">
+                        <div class="card-body">
+                            <div class="progress-container">
+                                <div class="progress">
+                                    <div id="cpu-progress" class="progress-bar" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <span id="cpu-usage-label" class="progress-label">0%</span>
+                            </div>
+                            <small class="text-muted">CPU 使用率</small>
+
+                            <div class="progress-container mt-2">
+                                <div class="progress">
+                                    <div id="memory-progress" class="progress-bar bg-success" role="progressbar" style="width: 0%" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100"></div>
+                                </div>
+                                <span id="memory-usage-label" class="progress-label">0%</span>
+                            </div>
+                            <small class="text-muted">内存使用率</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-3 animate__animated animate__fadeIn">
+            <div class="card-header bg-secondary text-white collapsible-header" data-toggle="collapse" data-target="#network-usage">
+                <i class="fas fa-network-wired"></i> 网络使用情况
+            </div>
+            <div class="collapse show" id="network-usage">
+                <div class="card-body">
+                    <p>累计上传流量: <span id="total-sent" class="data-value">加载中...</span></p>
+                    <p>累计下载流量: <span id="total-received" class="data-value">加载中...</span></p>
+                    <p>实时上传速度: <span id="current-sent" class="data-value">加载中...</span></p>
+                    <p>实时下载速度: <span id="current-received" class="data-value">加载中...</span></p>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-3 animate__animated animate__fadeIn">
+            <div class="card-header bg-info text-dark collapsible-header" data-toggle="collapse" data-target="#daily-usage-history">
+                <i class="fas fa-history"></i> 每日流量记录
+            </div>
+            <div class="collapse" id="daily-usage-history">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>上传流量</th>
+                                <th>下载流量</th>
+                            </tr>
+                        </thead>
+                        <tbody id="daily-usage-tbody">
+                            <tr><td colspan="3">加载中...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-3 animate__animated animate__fadeIn">
+            <div class="card-header bg-warning text-dark collapsible-header" data-toggle="collapse" data-target="#config-section">
+                <i class="fas fa-cogs"></i> 配置项
+            </div>
+            <div class="collapse" id="config-section">
+                <div class="card-body">
+                    <form id="config-form" method="POST" action="/update-config"  onsubmit="submitConfig(); return false;"> <!-- 添加 onsubmit -->
+                        {% for key, value in config.items() %}
+                        <div class="form-group">
+                            <label for="{{ key }}">{{ key }}</label>
+                            <input type="text" class="form-control" id="{{ key }}" name="{{ key }}" value="{{ value }}">
+                        </div>
+                        {% endfor %}
+                        <button type="submit" class="btn btn-primary">保存配置</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-3 animate__animated animate__fadeIn">
+            <div class="card-header bg-success text-white collapsible-header" data-toggle="collapse" data-target="#map-management">
+                <i class="fas fa-map"></i> 地图管理
+            </div>
+            <div class="collapse" id="map-management">
+                <div class="card-body">
+                    <div class="form-group">
+                        <label for="mapFile">选择地图文件 (zip)</label>
+                        <input type="file" class="form-control-file" id="mapFile" name="file">
+                    </div>
+                    <button class="btn btn-secondary" onclick="checkBeforeUpload()"><i class="fas fa-upload"></i> 上传地图</button>
+                    <button class="btn btn-warning ml-2" onclick="unzipMap()"><i class="fas fa-file-archive"></i> 解压地图</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card shadow mb-3 animate__animated animate__fadeIn">
+            <div class="card-header bg-danger text-white collapsible-header" data-toggle="collapse" data-target="#file-list-section">
+                <i class="fas fa-file-alt"></i> 文件管理
+            </div>
+            <div class="collapse" id="file-list-section">
+                <div class="card-body">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>文件名</th>
+                                <th>大小</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="files-tbody">
+                        </tbody>
+                    </table>
+                    <button class="btn btn-primary" onclick="fetchFilesList()"><i class="fas fa-sync-alt"></i> 刷新文件列表</button>
+                </div>
+            </div>
+        </div>
+        <div class="text-center mt-5 pt-3 border-top">
+            <p class="mb-0"><small class="text-muted">由</small> <strong>SFSHC</strong> <small class="text-muted">制作</small></p> <!-- 作者名 -->
+            <p class="mb-1"><small class="text-muted"><i class="fas fa-users mr-1"></i> 来自: <span class="text-secondary">AVD</span></small></p> 
+            <ul class="list-inline mb-2"> 
+                <li class="list-inline-item">
+                    <a href="https://github.com/SFSHC/PFPanel" target="_blank" class="text-secondary">
+                        <i class="fab fa-github mr-1"></i> GitHub 仓库
+                    </a>
+                </li>
+                <li class="list-inline-item">
+                    <a href="https://space.bilibili.com/1635006043" target="_blank" class="text-secondary"> 
+                        <i class="fas fa-video mr-1"></i> Bilibili 账号
+                    </a>
+                </li>
+            </ul>
+            <p class="mb-1"><small class="text-muted">版本: <span class="text-secondary">v1.5.0</span></small></p> 
+            <p class="mt-2 mb-0"><small class="text-muted">© 2024-2025 SFSHC. All rights reserved.</small></p> 
+            <p class="mb-0"><small class="text-muted">开源项目，欢迎贡献和 Star！</small></p> 
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        // Helper function to format bytes
+        function formatBytes(bytes, decimals = 2) {
+            if (!+bytes) return '0 Bytes';
+            const k = 1024;
+            const dm = decimals < 0 ? 0 : decimals;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return `${parseFloat((bytes / Math.pow(k, i)).toFixed(dm))} ${sizes[i]}`;
+        }
+
+        function submitConfig() {
+            var formData = new FormData(document.getElementById('config-form'));
+            fetch('/update-config', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            }).catch(error => {
+                console.error('Error:', error);
+                alert('保存配置失败！请查看控制台错误信息。'); // 添加错误提示
+            });
+        }
+
+        function checkBeforeUpload() {
+            var fileInput = document.getElementById('mapFile');
+            if (!fileInput.files.length) {
+                alert('请先选择一个文件。');
+                return;
+            }
+            var filename = fileInput.files[0].name;
+            fetch('/check-file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ filename: filename })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.exists) {
+                    if (confirm('文件已存在，是否覆盖？')) {
+                        uploadMap();
+                    } else {
+                        alert('上传已取消。');
+                    }
+                } else {
+                    uploadMap();
+                }
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function uploadMap() {
+            var formData = new FormData();
+            formData.append('file', document.getElementById('mapFile').files[0]);
+            fetch('/upload-map', {
+                method: 'POST',
+                body: formData
+            }).then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                fetchFilesList();
+                updateNetworkStats(); // 上传后更新网络统计
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function unzipMap() {
+            var fileInput = document.getElementById('mapFile');
+            if (!fileInput.files.length) {
+                alert('请先选择一个文件。');
+                return;
+            }
+            var filename = fileInput.files[0].name;
+            fetch('/unzip-map', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ filename: filename })
+            }).then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                fetchFilesList();
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+       function updateFileList() {
+            fetch('/files')
+            .then(response => response.json())
+            .then(files => {
+                const filesTbody = document.getElementById('files-tbody');
+                filesTbody.innerHTML = '';
+                files.forEach(file => {
+                    filesTbody.innerHTML += `
+                        <tr>
+                            <td>
+                                <span class="file-name">${file.name}</span>
+                                <input type="text" class="form-control rename-input" data-old-name="${file.name}" style="display:none"  value="${file.name}">
+                            </td>
+                            <td>${file.size}</td>
+                            <td>
+                                <button class="btn btn-secondary btn-sm rename-btn" onclick="showRenameInput(this)"><i class="fas fa-edit"></i> 重命名</button>
+                                <button class="btn btn-danger btn-sm" onclick="deleteFile('${file.name}')"><i class="fas fa-trash-alt"></i> 删除</button>
+                            </td>
+                        </tr>`;
+                });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function fetchFilesList() {
+             fetch('/files')
+                .then(response => response.json())
+                .then(files => {
+                    const filesTbody = document.getElementById('files-tbody');
+                    filesTbody.innerHTML = '';
+                    files.forEach(file => {
+                        filesTbody.innerHTML += `
+                            <tr>
+                                <td>
+                                    <span class="file-name">${file.name}</span>
+                                    <input type="text" class="form-control rename-input" data-old-name="${file.name}" style="display:none" value="${file.name}">
+                                </td>
+                                <td>${file.size}</td>
+                                <td>
+                                    <button class="btn btn-secondary btn-sm rename-btn" onclick="showRenameInput(this)"><i class="fas fa-edit"></i> 重命名</button>
+                                    <button class="btn btn-danger btn-sm" onclick="deleteFile('${file.name}')"><i class="fas fa-trash-alt"></i> 删除</button>
+                                </td>
+                            </tr>`;
+                    });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+
+        function showRenameInput(button) {
+            const row = button.closest('tr');
+            const fileNameSpan = row.querySelector('.file-name');
+            const renameInput = row.querySelector('.rename-input');
+            const oldName = renameInput.getAttribute('data-old-name');
+            fileNameSpan.style.display = 'none';
+            renameInput.style.display = 'inline-block';
+            renameInput.focus();
+            renameInput.value=oldName
+            renameInput.onblur = () => {
+                renameFile(renameInput, fileNameSpan);
+            };
+             renameInput.onkeydown = (event) => {
+                if (event.key === 'Enter') {
+                    renameFile(renameInput, fileNameSpan);
+                }else if (event.key === 'Escape') {
+                    fileNameSpan.style.display = 'inline-block';
+                    renameInput.style.display = 'none';
+                 }
+             };
+        }
+
+                function renameFile(input, span) {
+           const oldFilename = input.getAttribute('data-old-name');
+           const newFilename = input.value;
+
+           if (oldFilename === newFilename) {
+                span.style.display = 'inline-block';
+                input.style.display = 'none';
+                return; // 如果没有修改，直接退出
+            }
+
+            fetch('/rename-file', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                   oldFilename: oldFilename,
+                   newFilename: newFilename
+                })
+            })
+            .then(response => {
+                return response.json().then(data =>{
+                if (response.ok) {
+                   alert(data.message);
+                   fetchFilesList();
+                } else {
+                    alert('重命名失败: ' + data.error);
+                }
+                span.style.display = 'inline-block';
+                input.style.display = 'none';
+            });
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('重命名时发生错误：' + error);
+                span.style.display = 'inline-block';
+                input.style.display = 'none';
+            });
+        }
+
+        function deleteFile(filename) {
+            if (confirm('确定要删除 ' + filename + ' 吗？')) {
+                fetch('/delete-file', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ filename: filename })
+                })
+                .then(response => response.json())
+                .then(data => {
+                    alert(data.message);
+                    updateFileList();
+                    updateNetworkStats(); // 删除后更新网络统计（可能减少了流量）
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+            }
+        }
+
+        function controlServer(action) {
+            fetch('/control-server', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ action: action })
+            }).then(response => response.json())
+            .then(data => {
+                alert(data.message);
+                updateServerStatus(); // Update status after control action
+            }).catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function updateServerStatus() {
+            fetch('/server-status')
+                .then(response => response.json())
+                .then(data => {
+                    const statusSpan = document.getElementById('server-status');
+                    const startBtn = document.getElementById('start-server-btn');
+                    const stopBtn = document.getElementById('stop-server-btn');
+
+                    statusSpan.textContent = data.running ? '运行中' : '已停止';
+                    statusSpan.className = `data-value text-${data.running ? 'success' : 'danger'}`;
+
+                    startBtn.disabled = data.running;
+                    stopBtn.disabled = !data.running;
+
+                    document.getElementById('cpu-progress').style.width = `${data.cpu_usage}%`;
+                    document.getElementById('cpu-progress').setAttribute('aria-valuenow', data.cpu_usage);
+                    document.getElementById('cpu-usage-label').textContent = `${data.cpu_usage.toFixed(0)}%`;
+
+                    document.getElementById('memory-progress').style.width = `${data.memory_percent}%`;
+                    document.getElementById('memory-progress').setAttribute('aria-valuenow', data.memory_percent);
+                    document.getElementById('memory-usage-label').textContent = `${data.memory_percent.toFixed(0)}%`;
+                })
+                .catch(error => {
+                    console.error('Error fetching server status:', error);
+                });
+        }
+
+        function updateNetworkStats() {
+            fetch('/network-stats')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('total-sent').textContent = formatBytes(data.total_sent);
+                    document.getElementById('total-received').textContent = formatBytes(data.total_received);
+                    document.getElementById('current-sent').textContent = `${formatBytes(data.current_sent_speed)}/s`;
+                    document.getElementById('current-received').textContent = `${formatBytes(data.current_received_speed)}/s`;
+                })
+                .catch(error => {
+                    console.error('Error fetching network stats:', error);
+                });
+        }
+
+        function updateDailyUsage() {
+            fetch('/daily-usage')
+                .then(response => response.json())
+                .then(data => {
+                    const dailyUsageTbody = document.getElementById('daily-usage-tbody');
+                    dailyUsageTbody.innerHTML = '';
+                    data.forEach(item => {
+                        dailyUsageTbody.innerHTML += `
+                            <tr>
+                                <td>${item.date}</td>
+                                <td>${formatBytes(item.sent)}</td>
+                                <td>${formatBytes(item.received)}</td>
+                            </tr>`;
+                    });
+                    if (data.length === 0) {
+                        dailyUsageTbody.innerHTML = '<tr><td colspan="3">暂无记录</td></tr>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching daily usage:', error);
+                });
+        }
+
+        // 初始加载和定时更新
+        $(document).ready(function() {
+            updateFileList();
+            updateServerStatus();
+            updateNetworkStats();
+            updateDailyUsage();
+            setInterval(updateServerStatus, 5000); // 每 5 秒更新服务器状态
+            setInterval(updateNetworkStats, 5000); // 每 5 秒更新网络统计
+            setInterval(updateDailyUsage, 60000); // 每 1 分钟更新每日流量
+        });
+    </script>
+</body>
+</html>---
