@@ -1,11 +1,11 @@
 name: Build and Release Executable
 
 on:
-  workflow_dispatch: # 添加手动触发器
+  workflow_dispatch: # 手动触发
   push:
-    branches: [ "main" ]
+    branches: [ "main" ] # 当 push 到 main 分支时触发
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main" ] # 当 pull request 目标分支为 main 时触发
 
 jobs:
   build-linux:
@@ -35,33 +35,32 @@ jobs:
           path: dist/pfpanel
 
       - name: Create Release # 创建 GitHub Release
-        if: github.ref == 'refs/tags/v1.5' # 仅当触发事件为 v1.5 标签 push 时才创建 Release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: v1.5 # Release 标签为 v1.5
-          release_name: Polyfield Server Panel v1.5 # Release 名称
+          tag_name: v1.5 # Release 标签为 v1.5 (硬编码)
+          release_name: Polyfield Server Panel v1.5 # Release 名称 (硬编码)
           body: |
             🎉 感谢使用 Polyfield Server Panel v1.5！🎉
 
-            本次更新带来了以下重要改进：
+            本次更新带来了最新构建的可执行文件，可能包含以下改进 (具体更新内容请参考代码提交记录)：
 
-            * ✨ 全新可执行文件版本：  现在您可以直接下载预编译的可执行文件，无需配置 Python 环境，一键启动控制面板！
-            * 🚀 性能优化：  提升了控制面板的运行效率，优化了资源占用。
-            * 🐛 Bug 修复：  修复了已知的一些 Bug，提升了稳定性和用户体验。
-            * 📝 文档完善：  更新了 README.md 文档，提供了更详细的使用说明和安装指南。
+            * ✨ 最新可执行文件版本：  现在您可以直接下载预编译的可执行文件，无需配置 Python 环境，一键启动控制面板！
+            * 🚀 性能优化：  可能包含性能优化，提升控制面板的运行效率。
+            * 🐛 Bug 修复：  可能修复了一些 Bug，提升了稳定性和用户体验。
+            * 📝 文档更新：  文档可能进行了更新，提供了更完善的使用说明。
 
-            感谢 SFSHC from AVD战队的辛勤付出！  如果您在使用过程中遇到任何问题或有任何建议，欢迎在 GitHub Issues 中反馈。
+            感谢 SFSHC from AVD战队的持续维护！  如果您在使用过程中遇到任何问题或有任何建议，欢迎在 GitHub Issues 中反馈。
 
             **下载链接：**  请在 Assets 中下载 `pfpanel-linux-executable.zip` 文件。
 
             感谢您的支持！😊
           draft: false #  设置为 false，发布正式 Release
           prerelease: false # 设置为 false，不是预发布版本
+          overwrite: true # **新增：允许覆盖已存在的 Release**
 
       - name: Upload Release Asset # 上传可执行文件到 Release
-        if: github.ref == 'refs/tags/v1.5' # 仅当触发事件为 v1.5 标签 push 时才上传 Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -70,9 +69,9 @@ jobs:
           asset_path: dist/pfpanel.zip #  **重要：需要先将可执行文件压缩成 zip 包**
           asset_name: pfpanel-linux-executable.zip # Release Asset 文件名
           asset_content_type: application/zip # Release Asset MIME 类型 (zip 文件)
+          overwrite: true # **新增：允许覆盖已存在的同名 Asset**
 
       - name: Zip executable for release # 将可执行文件压缩成 zip 包
-        if: github.ref == 'refs/tags/v1.5' # 仅当触发事件为 v1.5 标签 push 时才执行压缩
         run: |
           cd dist
           zip -r pfpanel.zip pfpanel # 将 dist/pfpanel 文件夹压缩成 pfpanel.zip
