@@ -44,6 +44,7 @@
 *   ✅  安装了 Python 3.6+:**  服务器需要安装 Python 3.6 或更高版本 (推荐 Python 3.8+)。
 *   ✅  安装了 pip:**  pip 是 Python 的包管理工具，通常 Python 3.x 会自带 pip。
 *   ✅  网络连接畅通:**  服务器需要能够访问互联网以下载依赖包和资源。
+*   ✅  在防火墙中开启程序对应的端口**  正常访问网页。
 *   ## 注意：若未满足请自己搜索或询问AI，服务器搭建具体见：[Polyfield Server Builds](https://www.polyfield.net/builds)
 
 ### 🛠️  安装步骤 (详细教程) 🛠️
@@ -120,7 +121,7 @@ python3 pfpanel.py  # 或者 python web.py
 
 **Step 7: 访问控制面板**
 
-打开您的浏览器，访问 `http://您的服务器IP地址:9999` (请将 `您的服务器IP地址` 替换为您的服务器公网 IP 地址)。
+打开您的浏览器，访问 `http://您的服务器IP地址:9999` (请将 `您的服务器IP地址` 替换为您的服务器公网 IP 地址。记得在防火墙开启端口)。
 
 您应该看到 Polyfield Server Panel 的登录页面。使用您在 `server_config.ini` 文件中设置的 `secret_password` 进行登录。
 
