@@ -3,9 +3,9 @@ name: Build and Release Executable
 on:
   workflow_dispatch: # 手动触发
   push:
-    branches: [ "main" ] # 当 push 到 main 分支时触发
+    branches: [ "main" ]
   pull_request:
-    branches: [ "main" ] # 当 pull request 目标分支为 main 时触发
+    branches: [ "main" ]
 
 jobs:
   build-linux:
@@ -28,19 +28,19 @@ jobs:
         run: |
           pyinstaller pfpanel.spec
 
-      - name: Upload executable artifact (for workflow) # 保留上传 Artifact 步骤，方便 workflow 下载
+      - name: Upload executable artifact (for workflow) # 保留上传 Artifact 步骤
         uses: actions/upload-artifact@v4
         with:
           name: pfpanel-linux-executable
           path: dist/pfpanel
 
-      - name: Create Release # 创建 GitHub Release
-        uses: actions/create-release@v1
+      - name: Create or Update Release # 创建或更新 GitHub Release (使用 softprops/action-gh-release)
+        uses: softprops/action-gh-release@v1 #  替换为 softprops/action-gh-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           tag_name: v1.5 # Release 标签为 v1.5 (硬编码)
-          release_name: Polyfield Server Panel v1.5 # Release 名称 (硬编码)
+          name: Polyfield Server Panel v1.5 # Release 名称 (硬编码)
           body: |
             🎉 感谢使用 Polyfield Server Panel v1.5！🎉
 
@@ -56,22 +56,12 @@ jobs:
             **下载链接：**  请在 Assets 中下载 `pfpanel-linux-executable.zip` 文件。
 
             感谢您的支持！😊
-          draft: false #  设置为 false，发布正式 Release
-          prerelease: false # 设置为 false，不是预发布版本
-          overwrite: true # **新增：允许覆盖已存在的 Release**
+          draft: false
+          prerelease: false
+          files: dist/pfpanel.zip # **重要：直接在 Create Release 步骤中上传 Asset**
+          fail_if_exists: false # **新增：如果 Release 已存在，则更新 Release，而不是失败**
 
-      - name: Upload Release Asset # 上传可执行文件到 Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create-release.outputs.upload_url }} # 从 Create Release 步骤获取上传 URL
-          asset_path: dist/pfpanel.zip #  **重要：需要先将可执行文件压缩成 zip 包**
-          asset_name: pfpanel-linux-executable.zip # Release Asset 文件名
-          asset_content_type: application/zip # Release Asset MIME 类型 (zip 文件)
-          overwrite: true # **新增：允许覆盖已存在的同名 Asset**
-
-      - name: Zip executable for release # 将可执行文件压缩成 zip 包
+      - name: Zip executable for release # 将可执行文件压缩成 zip 包 (不再需要单独的 Upload Release Asset 步骤)
         run: |
           cd dist
           zip -r pfpanel.zip pfpanel # 将 dist/pfpanel 文件夹压缩成 pfpanel.zip
