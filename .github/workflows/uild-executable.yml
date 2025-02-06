@@ -1,10 +1,8 @@
 name: Build and Release Executable
+
 on:
-  workflow_dispatch: # 添加手动触发器
-  push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+  workflow_dispatch: # 手动触发 workflow
+
 jobs:
   build:
     runs-on: ubuntu-22.04 # 使用 Ubuntu 22.04 系统
