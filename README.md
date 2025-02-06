@@ -131,7 +131,7 @@ PFPanel 仅为控制面板，不包含 Polyfield 服务端程序。请参考 [Po
 
 ## 🔄 升级指南
 
-*   **源码:** `cd PFPanel && git pull && pip install --upgrade -r requirements.txt && 重启`
+*   **源码:** `cd PFPanel && git pull && pip install --upgrade -r requirements.txt && restart`
 *   **可执行文件:** 下载新版本，替换旧文件，重启。
 
 ## ⚠️ 安全警示
