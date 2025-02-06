@@ -23,13 +23,7 @@ jobs:
         run: pip install pyinstaller
 
       - name: Create executable with PyInstaller # 使用 PyInstaller 创建可执行文件
-        run: |
-          pyinstaller --onefile \
-            --name pfpanel \ # 可执行文件名称
-            --add-data "login.html:." \templates # 添加 login.html 到可执行文件目录
-            --add-data "config.html:." \templates # 添加 config.html 到可执行文件目录
-            --add-data "404.html:." \templates # 添加 404.html 到可执行文件目录
-            pfpanel.py # 主程序文件
+        run: pyinstaller --onefile --name pfpanel --add-data "templates/login.html:." --add-data "templates/config.html:." --add-data "templates/404.html:." pfpanel.py
 
       - name: Create GitHub Release # 创建 GitHub Release
         id: create_release
