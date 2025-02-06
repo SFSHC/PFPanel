@@ -9,7 +9,7 @@
 
 ## 🎉 欢迎使用 PFPanel！ 🎉
 
-您好！感谢您选择 **PFPanel** —— 由 **SFSHC from AVD战队** 倾心打造的 **Polyfield** 游戏服务器 Web 控制面板。告别繁琐的命令行，拥抱简洁、直观的 Web 界面，让服务器管理变得轻松愉悦！
+您好！感谢您使用 **PFPanel** —— 由 **SFSHC from AVD战队** 倾心打造的 **Polyfield** 游戏服务器 Web 控制面板。告别繁琐的命令行，拥抱简洁、直观的 Web 界面，让服务器管理变得轻松愉悦！
 
 **PFPanel 能为您做什么？**
 
