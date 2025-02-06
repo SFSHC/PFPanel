@@ -3,7 +3,7 @@
 <!-- 项目 Logo (可选) -->
 <!-- ![Project Logo](path/to/logo.png) -->
 
-### ✨ 效果预览 ✨
+### ✨ 效果预览 ✨ （板块可单击展开）
 
 ![Polyfield Server Panel 预览](https://github.com/user-attachments/assets/244dc01d-d030-46bc-9737-d95e2b2bfa90)
 
