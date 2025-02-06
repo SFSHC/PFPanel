@@ -179,7 +179,7 @@ PFPanel 仅为控制面板，不包含 Polyfield 服务端程序。请参考 [Po
 *   邮箱: sfshc@haudio.us.kg
 
 **感谢您的使用和支持！**
-##此readme总体由gemini AI完成，SFSHC简单修改
+## 此readme总体由gemini AI完成，SFSHC简单修改
 
 ---
 
