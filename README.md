@@ -2,7 +2,7 @@
 
 <!-- 项目 Logo (可选) -->
 <!-- ![Project Logo](path/to/logo.png) -->
-## 以下内容由Gemini2.0创作，SFSHC简单修改
+## 以下readme由Gemini2.0创作，SFSHC简单修改
 ### ✨ 效果预览 ✨ （板块可单击展开）
 
 ![Polyfield Server Panel 预览](https://github.com/user-attachments/assets/244dc01d-d030-46bc-9737-d95e2b2bfa90)
