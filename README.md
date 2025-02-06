@@ -1,7 +1,7 @@
 # Polyfield Server Panel  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
-# 效果预览
-![image](https://github.com/user-attachments/assets/244dc01d-d030-46bc-9737-d95e2b2bfa90)
+### 效果预览
+## ![image](https://github.com/user-attachments/assets/244dc01d-d030-46bc-9737-d95e2b2bfa90)
 
 
 ## 🎉 欢迎使用 Polyfield Server Panel！ 🎉
@@ -44,7 +44,7 @@
 *   ✅  安装了 Python 3.6+:**  服务器需要安装 Python 3.6 或更高版本 (推荐 Python 3.8+)。
 *   ✅  安装了 pip:**  pip 是 Python 的包管理工具，通常 Python 3.x 会自带 pip。
 *   ✅  网络连接畅通:**  服务器需要能够访问互联网以下载依赖包和资源。
-*   # 注意：若未满足请自己搜索或询问AI
+*   ## 注意：若未满足请自己搜索或询问AI，服务器搭建具体见：[Polyfield Server Builds](https://www.polyfield.net/builds)
 
 ### 🛠️  安装步骤 (详细教程) 🛠️
 
@@ -55,6 +55,7 @@
 **Step 2: 下载 Polyfield Server Panel 代码**
 
 在您希望安装控制面板的目录下，使用 `git clone` 命令克隆代码仓库：
+（需要能访问github，若不能请自己下载或下载release中的编译包）
 
 ```bash
 git clone https://github.com/SFSHC/Polyfield-Server-Panel.git  # 或者您创建的仓库地址
