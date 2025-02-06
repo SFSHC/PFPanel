@@ -21,7 +21,7 @@
 *   🗺️ **地图管理：** 上传、解压、删除，地图管理从未如此简单。
 *   📁 **文件管理：** 浏览、重命名、删除，文件操作便捷高效。
 
-**PFPanel - 开源、共享、共进步！** 我们遵循 **GNU GPLv3 许可证**，期待您的参与和贡献！
+**PFPanel - 开源、共享、共进步！** 遵循 **GNU GPLv3 许可证**，期待您的参与和贡献！
 
 ## ✨ 功能亮点 ✨
 
@@ -178,7 +178,8 @@ PFPanel 仅为控制面板，不包含 Polyfield 服务端程序。请参考 [Po
 *   Bilibili: [Bilibili](https://space.bilibili.com/1635006043)
 *   邮箱: sfshc@haudio.us.kg
 
-**感谢您的使用和支持！** PFPanel 与您一同成长！
+**感谢您的使用和支持！**
+##此readme总体由gemini AI完成，SFSHC简单修改
 
 ---
 
