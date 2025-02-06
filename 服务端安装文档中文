@@ -1,0 +1,33 @@
+
+请将配置文件放置在你的 VPS 上的以下位置：
+/root/.config/unity3d/Mohammad Alizade/Polyfield/ServerConfig.txt
+
+~~~ 运行服务器 ~~~
+
+你需要安装以下软件包：
+apt-get install screen unzip
+
+在你的 VPS 上下载游戏：
+wget https://polyfield.net/builds/Polyfield_v0.6_Linux.zip
+
+解压游戏：
+unzip Polyfield_v0.6_Linux.zip
+
+赋予执行权限：
+chmod +x Polyfield_v0.6_Linux.x86_64
+
+创建一个 screen，以便你可以关闭终端：
+screen -S test
+
+在 screen 中运行游戏：
+./Polyfield_v0.6_Linux.x86_64
+
+从 screen 分离：
+Ctrl + A + D
+
+关闭终端。
+
+~~~ 享受游戏 ~~~
+
+稍后访问终端：
+screen -r test
