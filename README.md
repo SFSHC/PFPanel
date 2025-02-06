@@ -49,7 +49,7 @@ PFPanel 为您提供多种启动方式，选择适合您的即可：
 *   ✅ **pip:**  Python 包管理器。
 *   ✅ **网络畅通:**  用于下载依赖。
 *   ✅ **防火墙端口:**  确保已开放程序端口。
-*   ✅ **Polyfield 服务端部署:**  [Polyfield 服务端文档 (微软翻译)](https://www.microsofttranslator.com/bv.aspx?to=zh-CN&ref= SERP&url=https://polyfield.net/builds/%2523README.txt)
+*   ✅ **Polyfield 服务端部署:**  [Polyfield 服务端安装文档](https://polyfield.net/builds/%2523README.txt)
 
 #### 🕹️ 详细步骤
 
