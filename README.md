@@ -1,4 +1,5 @@
-[README.md](https://github.com/user-attachments/files/29002087/README.md)# PFPanel  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
+[README.md](https://github.com/user-attachments/files/29002087/README.md)
+# PFPanel  [![License: GPL v3](https://img.shields.io/badge/License-GPLv3-blue.svg)](https://www.gnu.org/licenses/gpl-3.0)
 
 **中文** | [**English**](./README_EN.md)
 
