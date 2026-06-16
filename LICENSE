@@ -1,12 +1,33 @@
+                    GNU GENERAL PUBLIC LICENSE
+                       Version 3, 29 June 2007
+
+ Copyright (C) 2007 Free Software Foundation, Inc. <https://fsf.org/>
+ Everyone is permitted to copy and distribute verbatim copies
+ of this license document, but changing it is not allowed.
+
+                            Preamble
+
+  The GNU General Public License is a free, copyleft license for
+software and other kinds of works.
+
+  The licenses for most software and other practical works are designed
+to take away your freedom to share and change the works.  By contrast,
+the GNU General Public License is intended to guarantee your freedom to
+share and change all versions of a program--to make sure it remains free
+software for all its users.
+
+  For the complete license text, please visit:
+  https://www.gnu.org/licenses/gpl-3.0.txt
+
+---
 
 ## 联系方式
 
 *   **作者:** SFSHC
 *   **GitHub:** https://github.com/SFSHC
-*   **Bilibili:** https://space.bilibili.com/1635006043
-*   **邮箱 (可选):** sfshc@haudio.us.kg
+*   **项目主页:** https://github.com/SFSHC/PFPanel
 
-**感谢使用 Polyfield Server Panel!**  希望这个控制面板能帮助你更好地管理你的 Polyfield 服务器。 如果有任何问题或建议，欢迎在 GitHub Issues 中交流。
+**感谢使用 PFPanel!**
 
 ---
-**SFSHC 制作**  (版本 v1.5.0)  © 2024-2025 SFSHC. All rights reserved.
+**SFSHC 制作** (版本 v1.6.0) © 2024-2026 SFSHC. All rights reserved.
