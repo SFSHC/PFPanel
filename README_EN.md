@@ -4,7 +4,9 @@
 
 ## ✨ Preview ✨
 
-![PFPanel Preview](https://github.com/user-attachments/assets/244dc01d-d030-46bc-9737-d95e2b2bfa90)
+<img width="1730" height="1040" alt="image" src="https://github.com/user-attachments/assets/b24640b6-1c8e-40cb-8c82-d2cc88d61733" />
+<img width="1026" height="974" alt="image" src="https://github.com/user-attachments/assets/dfa99f57-fa7c-45e8-b471-ad18f2fd40fe" />
+
 
 ## 🎉 Welcome to PFPanel! 🎉
 
