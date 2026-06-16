@@ -39,14 +39,70 @@ PFPanel features a modern UI design:
 ### Requirements
 
 *   Linux server (Ubuntu/Debian recommended)
-*   Polyfield server deployed
 *   Python 3.8+
 *   Port 9999 open
 
-### Installation
+### Step 1: Install Polyfield Server
+
+> ⚠️ **Before you proceed!** Make sure to configure your server according to [Polyfield official installation guide](https://polyfield.net/builds/#README.txt).
+
+**Prerequisites:**
+1. Make sure your Ubuntu server has IPv6 disabled, otherwise players cannot join through server list
+2. Make sure you have root access
+3. Game should be downloaded inside `/root` folder
+
+**Install dependencies:**
+```bash
+apt-get install screen unzip libc6-i386 lib32stdc++6
+```
+
+**Download and extract server:**
+```bash
+# Create pf directory
+mkdir -p /root/pf
+cd /root/pf
+
+# Download server
+wget https://polyfield.net/builds/Polyfield_v0.7.5_Linux.zip
+
+# Extract to current directory
+unzip Polyfield_v0.7.5_Linux.zip
+chmod +x Polyfield_v0.7.5_Linux.x86_64
+```
+
+**First run to generate config files:**
+```bash
+./Polyfield_v0.7.5_Linux.x86_64
+# Wait about 1 minute then press Ctrl + C to close
+# Check if ServerConfig.txt appears
+ls
+```
+
+**Disable IPv6 (Important):**
+```bash
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sysctl -w net.ipv6.conf.default.disable_ipv6=1
+sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+
+echo -e "net.ipv6.conf.all.disable_ipv6=1\nnet.ipv6.conf.default.disable_ipv6=1\nnet.ipv6.conf.lo.disable_ipv6=1" | sudo tee -a /etc/sysctl.conf
+sysctl -p
+```
+
+**Directory structure:**
+```
+/root/pf/
+├── Polyfield_v0.7.5_Linux.x86_64  # Game executable
+├── ServerConfig.txt                # Server config
+├── banned-users.txt                # Ban list
+└── editor/                         # Maps folder
+```
+
+> 📖 For complete installation guide, see [Polyfield official documentation](https://polyfield.net/builds/#README.txt)
+
+### Step 2: Install and Start Panel
 
 ```bash
-# Clone repository
+# Clone panel
 git clone https://github.com/SFSHC/PFPanel.git
 cd PFPanel
 
@@ -62,6 +118,8 @@ python3 web.py
 ```
 
 Access via browser: `http://YOUR_SERVER_IP:9999`
+
+First access will prompt to set admin password.
 
 ### Using Executable
 

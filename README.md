@@ -41,14 +41,70 @@ PFPanel 采用现代化 UI 设计理念：
 ### 环境要求
 
 *   Linux 服务器 (推荐 Ubuntu/Debian)
-*   Polyfield 服务端已部署
 *   Python 3.8+
 *   开放端口 9999
 
-### 安装步骤
+### 第一步：安装 Polyfield 服务端
+
+> ⚠️ **开始之前！** 请确保按照 [Polyfield 官方安装说明](https://polyfield.net/builds/#README.txt) 的要求配置好服务器。
+
+**前置要求：**
+1. 确保 Ubuntu 服务器已禁用 IPv6，否则玩家无法通过服务器列表加入
+2. 确保有 root 权限
+3. 游戏应下载到 `/root` 目录下
+
+**安装依赖：**
+```bash
+apt-get install screen unzip libc6-i386 lib32stdc++6
+```
+
+**下载并解压服务端：**
+```bash
+# 创建 pf 目录
+mkdir -p /root/pf
+cd /root/pf
+
+# 下载服务端
+wget https://polyfield.net/builds/Polyfield_v0.7.5_Linux.zip
+
+# 解压到当前目录
+unzip Polyfield_v0.7.5_Linux.zip
+chmod +x Polyfield_v0.7.5_Linux.x86_64
+```
+
+**首次运行生成配置文件：**
+```bash
+./Polyfield_v0.7.5_Linux.x86_64
+# 等待约1分钟后按 Ctrl + C 关闭
+# 检查 ServerConfig.txt 是否生成
+ls
+```
+
+**禁用 IPv6（重要）：**
+```bash
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sysctl -w net.ipv6.conf.default.disable_ipv6=1
+sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+
+echo -e "net.ipv6.conf.all.disable_ipv6=1\nnet.ipv6.conf.default.disable_ipv6=1\nnet.ipv6.conf.lo.disable_ipv6=1" | sudo tee -a /etc/sysctl.conf
+sysctl -p
+```
+
+**目录结构：**
+```
+/root/pf/
+├── Polyfield_v0.7.5_Linux.x86_64  # 游戏程序
+├── ServerConfig.txt                # 服务器配置
+├── banned-users.txt                # 封禁列表
+└── editor/                         # 地图文件夹
+```
+
+> 📖 完整安装说明请参考 [Polyfield 官方文档](https://polyfield.net/builds/#README.txt)
+
+### 第二步：安装并启动面板
 
 ```bash
-# 克隆项目
+# 克隆面板
 git clone https://github.com/SFSHC/PFPanel.git
 cd PFPanel
 
@@ -64,6 +120,8 @@ python3 web.py
 ```
 
 浏览器访问: `http://服务器IP:9999`
+
+首次访问会提示设置管理员密码。
 
 ### 使用可执行文件
 
