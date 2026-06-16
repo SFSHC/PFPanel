@@ -2,22 +2,365 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>登录</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/css/bootstrap.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 服务器管理面板</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .login-container {
+            width: 100%;
+            max-width: 420px;
+            padding: 20px;
+        }
+        
+        .login-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .login-header h1 {
+            color: #ffffff;
+            font-size: 28px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+        
+        .login-header p {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 14px;
+        }
+        
+        .login-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .login-icon i {
+            font-size: 40px;
+            color: white;
+        }
+        
+        .form-floating {
+            margin-bottom: 20px;
+        }
+        
+        .form-floating > .form-control {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: white;
+            font-size: 15px;
+            padding: 1rem 1rem;
+        }
+        
+        .form-floating > .form-control:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+            color: white;
+        }
+        
+        .form-floating > label {
+            color: rgba(255, 255, 255, 0.6);
+            padding: 1rem 1rem;
+        }
+        
+        .form-floating > .form-control:focus ~ label,
+        .form-floating > .form-control:not(:placeholder-shown) ~ label {
+            color: #667eea;
+        }
+        
+        .btn-login {
+            width: 100%;
+            padding: 14px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-login:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .btn-login:active {
+            transform: translateY(0);
+        }
+        
+        .login-footer {
+            text-align: center;
+            margin-top: 30px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 13px;
+        }
+        
+        .credits-section {
+            text-align: center;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+        
+        .credits-section .credit-line {
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+        
+        .credits-section a {
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            transition: color 0.2s ease;
+        }
+        
+        .credits-section a:hover {
+            color: #667eea;
+        }
+        
+        .credits-section .version-badge {
+            display: inline-block;
+            background: rgba(102, 126, 234, 0.2);
+            color: #667eea;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 10px;
+            font-weight: 600;
+        }
+        
+        .lang-switcher-login {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+        
+        .lang-btn-login {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 5px;
+        }
+        
+        .lang-btn-login:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .lang-btn-login.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+        
+        .input-group-text {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-left: none;
+            color: rgba(255, 255, 255, 0.6);
+        }
+        
+        .password-toggle {
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+        
+        .password-toggle:hover {
+            color: #667eea;
+        }
+        
+        .alert-custom {
+            background: rgba(235, 51, 73, 0.2);
+            border: 1px solid rgba(235, 51, 73, 0.3);
+            color: #f45c43;
+            border-radius: 12px;
+            padding: 12px 16px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+    </style>
 </head>
 <body>
-    <div class="container mt-5">
-        <h1>登录</h1>
-        <form method="POST" action="/login">
-            <div class="form-group">
-                <label for="password">密码</label>
-                <input type="password" class="form-control" id="password" name="password" required>
-            </div>
-            <button type="submit" class="btn btn-primary">登录</button>
-        </form>
+    <div class="lang-switcher-login">
+        <button class="lang-btn-login active" onclick="switchLoginLang('zh')">🇨🇳 中文</button>
+        <button class="lang-btn-login" onclick="switchLoginLang('en')">🇺🇸 EN</button>
     </div>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/2.9.2/umd/popper.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="login-icon">
+                    <i class="bi bi-server"></i>
+                </div>
+                <h1 data-i18n="login.title">服务器管理面板</h1>
+                <p data-i18n="login.subtitle">请输入密码以继续</p>
+            </div>
+            
+            {% if error %}
+            <div class="alert-custom">
+                <i class="bi bi-exclamation-circle me-2"></i>{{ error }}
+            </div>
+            {% endif %}
+            
+            <form method="POST" action="/login">
+                <div class="form-floating">
+                    <input type="password" class="form-control" id="password" name="password" placeholder="密码" required>
+                    <label for="password"><i class="bi bi-lock me-2"></i><span data-i18n="login.password">密码</span></label>
+                </div>
+                <button type="submit" class="btn btn-login">
+                    <i class="bi bi-box-arrow-in-right me-2"></i><span data-i18n="login.loginBtn">登录</span>
+                </button>
+            </form>
+            
+            <div class="login-footer">
+                <p><i class="bi bi-shield-check me-1"></i><span data-i18n="login.secure">安全连接已启用</span></p>
+            </div>
+            
+            <div class="credits-section" id="login-credits">
+                <div class="credit-line">
+                    <span data-i18n="credits.madeBy">由</span> <strong>SFSHC</strong> <span data-i18n="credits制作">制作</span>
+                </div>
+                <div class="credit-line">
+                    <i class="bi bi-people"></i>
+                    <span data-i18n="credits.from">来自</span>: <span style="color: rgba(255,255,255,0.6);">AVD</span>
+                </div>
+                <div class="credit-line">
+                    <a href="https://github.com/SFSHC/PFPanel" target="_blank">
+                        <i class="bi bi-github"></i> <span data-i18n="credits.github">GitHub</span>
+                    </a>
+                </div>
+                <div class="credit-line">
+                    <span class="version-badge">v1.5.0</span>
+                </div>
+                <div class="credit-line" style="margin-top: 6px; font-size: 10px;">
+                    © 2024-2026 SFSHC
+                </div>
+                <div class="credit-line" style="font-size: 10px;" data-i18n="credits.openSource">
+                    开源项目，欢迎贡献和 Star！
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        const loginTranslations = {
+            zh: {
+                'login.title': '服务器管理面板',
+                'login.subtitle': '请输入密码以继续',
+                'login.password': '密码',
+                'login.loginBtn': '登录',
+                'login.secure': '安全连接已启用',
+                'credits.madeBy': '由',
+                'credits制作': '制作',
+                'credits.from': '来自',
+                'credits.github': 'GitHub',
+                'credits.openSource': '开源项目，欢迎贡献和 Star！'
+            },
+            en: {
+                'login.title': 'Server Control Panel',
+                'login.subtitle': 'Please enter password to continue',
+                'login.password': 'Password',
+                'login.loginBtn': 'Login',
+                'login.secure': 'Secure connection enabled',
+                'credits.madeBy': 'Made by',
+                'credits制作': '',
+                'credits.from': 'From',
+                'credits.github': 'GitHub',
+                'credits.openSource': 'Open source project, contributions and Stars welcome!'
+            }
+        };
+        
+        let currentLoginLang = localStorage.getItem('lang') || 'zh';
+        
+        function switchLoginLang(lang) {
+            currentLoginLang = lang;
+            localStorage.setItem('lang', lang);
+            
+            document.querySelectorAll('.lang-btn-login').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            applyLoginTranslations();
+        }
+        
+        function applyLoginTranslations() {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (loginTranslations[currentLoginLang][key] !== undefined) {
+                    element.textContent = loginTranslations[currentLoginLang][key];
+                }
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            applyLoginTranslations();
+            
+            document.querySelectorAll('.lang-btn-login').forEach(btn => {
+                btn.classList.remove('active');
+                if ((currentLoginLang === 'zh' && btn.textContent.includes('中文')) || 
+                    (currentLoginLang === 'en' && btn.textContent.includes('EN'))) {
+                    btn.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

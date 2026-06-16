@@ -1,11 +1,179 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>404 Not Found</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>404 - 页面未找到</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            min-height: 100vh;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .error-container {
+            text-align: center;
+            padding: 40px;
+            animation: fadeInUp 0.6s ease-out;
+        }
+        
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .error-code {
+            font-size: 120px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+        }
+        
+        .error-title {
+            color: #ffffff;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+        
+        .error-message {
+            color: rgba(255, 255, 255, 0.6);
+            font-size: 16px;
+            margin-bottom: 30px;
+        }
+        
+        .btn-home {
+            padding: 12px 30px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            font-size: 16px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-home:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+        }
+        
+        .lang-switcher-login {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 1001;
+        }
+        
+        .lang-btn-login {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: rgba(255, 255, 255, 0.7);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            margin-left: 5px;
+        }
+        
+        .lang-btn-login:hover {
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        
+        .lang-btn-login.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+        }
+    </style>
 </head>
 <body>
-    <h1>404 Not Found</h1>
-    <p>The requested URL was not found on the server.</p>
+    <div class="lang-switcher-login">
+        <button class="lang-btn-login active" onclick="switch404Lang('zh')">🇨🇳 中文</button>
+        <button class="lang-btn-login" onclick="switch404Lang('en')">🇺🇸 EN</button>
+    </div>
+    
+    <div class="error-container">
+        <div class="error-code">404</div>
+        <h1 class="error-title" data-i18n="404.title">页面未找到</h1>
+        <p class="error-message" data-i18n="404.message">抱歉，您访问的页面不存在</p>
+        <a href="/" class="btn-home">
+            <i class="bi bi-house-door"></i> <span data-i18n="404.home">返回首页</span>
+        </a>
+    </div>
+    
+    <script>
+        const errorTranslations = {
+            zh: {
+                '404.title': '页面未找到',
+                '404.message': '抱歉，您访问的页面不存在',
+                '404.home': '返回首页'
+            },
+            en: {
+                '404.title': 'Page Not Found',
+                '404.message': 'Sorry, the page you visited does not exist',
+                '404.home': 'Back to Home'
+            }
+        };
+        
+        let current404Lang = localStorage.getItem('lang') || 'zh';
+        
+        function switch404Lang(lang) {
+            current404Lang = lang;
+            localStorage.setItem('lang', lang);
+            
+            document.querySelectorAll('.lang-btn-login').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+            
+            apply404Translations();
+        }
+        
+        function apply404Translations() {
+            document.querySelectorAll('[data-i18n]').forEach(element => {
+                const key = element.getAttribute('data-i18n');
+                if (errorTranslations[current404Lang][key]) {
+                    element.textContent = errorTranslations[current404Lang][key];
+                }
+            });
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            apply404Translations();
+            
+            document.querySelectorAll('.lang-btn-login').forEach(btn => {
+                btn.classList.remove('active');
+                if ((current404Lang === 'zh' && btn.textContent.includes('中文')) || 
+                    (current404Lang === 'en' && btn.textContent.includes('EN'))) {
+                    btn.classList.add('active');
+                }
+            });
+        });
+    </script>
 </body>
 </html>
