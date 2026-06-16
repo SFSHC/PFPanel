@@ -1,33 +1,249 @@
+以下是该服务器搭建指南的翻译：
 
-请将配置文件放置在你的 VPS 上的以下位置：
-/root/.config/unity3d/Mohammad Alizade/Polyfield/ServerConfig.txt
+---
 
-~~~ 运行服务器 ~~~
+# 继续之前！
 
-你需要安装以下软件包：
-apt-get install screen unzip
+1. 确保你的 Ubuntu 服务器已禁用 IPv6，否则玩家无法通过服务器列表加入。（见下方说明）
+2. 确保你拥有 root 权限
+3. 游戏应下载到 **"/root"** 文件夹内，例如 **"/root/polyfield"**
 
-在你的 VPS 上下载游戏：
-wget https://polyfield.net/builds/Polyfield_v0.6_Linux.zip
+---
+
+## v0.7.5+ 更新说明
+
+游戏文件夹和文件会在游戏文件旁边创建：
+- `/root/Polyfield.x86_64`  → 游戏主程序
+- `/root/editor`             → 编辑器地图文件夹
+- `/root/ServerConfig.txt`    → 服务器配置文件
+- `/root/banned-users.txt`   → 封禁用户列表
+
+游戏首次运行时会自动迁移这些文件。
+
+---
+
+## 安装游戏
+
+需要安装以下依赖：
+```bash
+apt-get install screen unzip libc6-i386 lib32stdc++6
+```
+
+安装 32 位支持库：（可选）
+```bash
+apt-get install libncurses5:i386
+```
+
+下载游戏：
+```bash
+wget https://polyfield.net/builds/Polyfield_v0.7.5_Linux.zip
+```
 
 解压游戏：
-unzip Polyfield_v0.6_Linux.zip
+```bash
+unzip Polyfield_v0.7.5_Linux.zip
+```
 
 赋予执行权限：
-chmod +x Polyfield_v0.6_Linux.x86_64
+```bash
+chmod +x Polyfield_v0.7.5_Linux.x86_64
+```
 
-创建一个 screen，以便你可以关闭终端：
+---
+
+## 游戏配置
+
+运行游戏一次以创建文件夹：
+```bash
+./Polyfield_v0.7.5_Linux.x86_64
+```
+
+1 分钟后关闭游戏：
+```
+Ctrl + C  或  Ctrl + Z
+```
+
+检查 "ServerConfig.txt" 文件是否出现：
+```bash
+ls
+# 按回车
+```
+
+编辑配置：
+```bash
+nano ServerConfig.txt
+```
+
+保存：
+```
+Ctrl + O
+# 按回车
+```
+
+如果文件未出现，手动下载：（或检查你的目录）
+```bash
+wget https://polyfield.net/builds/ServerConfig.txt
+```
+
+---
+
+## 运行服务器
+
+创建一个 screen 会话，以便关闭终端后游戏继续运行：
+```bash
 screen -S test
+```
 
 在 screen 中运行游戏：
-./Polyfield_v0.6_Linux.x86_64
+```bash
+./Polyfield_v0.7.5_Linux.x86_64
+```
 
-从 screen 分离：
+分离 screen 会话：
+```
 Ctrl + A + D
+```
 
-关闭终端。
+关闭终端即可。
 
-~~~ 享受游戏 ~~~
-
-稍后访问终端：
+**后续访问游戏服务器：**
+```bash
 screen -r test
+```
+
+查看运行中的游戏进程：
+```bash
+top
+```
+
+关闭服务器：
+```
+Ctrl + C  或  Ctrl + Z
+```
+
+---
+
+## 下载一些优质地图（可选）
+
+移动到地图目录：
+```bash
+cd /root/editor
+```
+
+删除所有现有地图：
+```bash
+rm -r *
+```
+
+下载地图包：
+```bash
+wget https://polyfield.net/builds/Server_Maps.zip
+```
+
+解压：
+```bash
+unzip Server_Maps.zip
+```
+
+---
+
+## 封禁列表
+
+用户将被封禁 **90 天**。
+
+服务器在此保存封禁列表：
+```
+/root/banned-users.txt
+```
+
+编辑前请先关闭游戏。
+
+---
+
+## 定时任务（可选）（每晚重启应用程序）
+
+编辑 crontab：
+```bash
+crontab -e
+```
+
+每 2 小时重启一次：
+```bash
+0 */2 * * * pkill Polyfield ; ./Polyfield_v0.7.5_Linux.x86_64 &
+```
+
+保存：
+```
+Ctrl + O
+# 按回车
+```
+
+---
+
+## 禁用 IPv6
+
+禁用 IPv6：
+```bash
+sysctl -w net.ipv6.conf.all.disable_ipv6=1
+sysctl -w net.ipv6.conf.default.disable_ipv6=1
+sysctl -w net.ipv6.conf.lo.disable_ipv6=1
+
+echo -e "net.ipv6.conf.all.disable_ipv6=1\nnet.ipv6.conf.default.disable_ipv6=1\nnet.ipv6.conf.lo.disable_ipv6=1" | sudo tee -a /etc/sysctl.conf
+```
+
+应用更改：
+```bash
+sysctl -p
+```
+
+检查是否成功：
+```bash
+ip -6 addr show
+```
+
+---
+
+## Systemd 服务（可选）（崩溃后自动保持应用运行）
+
+创建自动运行服务文件：
+```bash
+sudo nano /etc/systemd/system/game.service
+```
+
+复制并粘贴以下内容到文件中：
+```
+###########################################
+[Unit]
+Description=Game Server
+After=network.target
+
+[Service]
+ExecStart=/root/Polyfield_v0.7.5_Linux.x86_64
+Restart=always
+RestartSec=5
+WorkingDirectory=/root
+User=root
+RestartForceExitStatus=0
+#Environment=GAME_VAR=value
+
+[Install]
+WantedBy=multi-user.target
+###########################################
+```
+
+重新加载并启动服务：
+```bash
+sudo systemctl daemon-reload
+sudo systemctl enable game.service
+sudo systemctl start game.service
+```
+
+检查状态：
+```bash
+sudo systemctl status game.service
+```
+
+查看实时日志：
+```bash
+sudo journalctl -u game.service -f
+```
